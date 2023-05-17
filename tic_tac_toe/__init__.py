@@ -9,6 +9,7 @@ class TicTacToeException(Exception):
     def __init__(self, *args: object) -> None:
         super().__init__(*args)
 
+
 class TieTicTacToe(TicTacToeException):
     def __init__(self) -> None:
         super().__init__("there was a tie on the TIC TAC toe")
@@ -29,24 +30,25 @@ class CoordinateOccupiedException(TicTacToeException):
 class TicTacToe:
 
     tests: typing.List[
-            typing.Tuple[
-                typing.Tuple[int, int],
-                typing.Tuple[int, int],
-                typing.Tuple[int, int]
-            ]
-        ] = [
-            ((0, 0), (1, 1), (2, 2)),
-            ((0, 2), (1, 1), (2, 0)),
-            ((0, 0), (0, 1), (0, 2)),
-            ((1, 0), (1, 1), (1, 2)),
-            ((2, 0), (2, 1), (2, 2)),
-            ((0, 0), (1, 0), (2, 0)),
-            ((0, 1), (1, 1), (2, 1)),
-            ((0, 2), (1, 2), (2, 2)),
+        typing.Tuple[
+            typing.Tuple[int, int],
+            typing.Tuple[int, int],
+            typing.Tuple[int, int]
         ]
+    ] = [
+        ((0, 0), (1, 1), (2, 2)),
+        ((0, 2), (1, 1), (2, 0)),
+        ((0, 0), (0, 1), (0, 2)),
+        ((1, 0), (1, 1), (1, 2)),
+        ((2, 0), (2, 1), (2, 2)),
+        ((0, 0), (1, 0), (2, 0)),
+        ((0, 1), (1, 1), (2, 1)),
+        ((0, 2), (1, 2), (2, 2)),
+    ]
 
     def __init__(self, player1: Player = Human("X"), player2: Player = EasyBot("O")) -> None:
-        self._coordinates: tuple[typing.List[typing.Optional[Player]]] = tuple([None for _ in range(3)] for _ in range(3))
+        self._coordinates: tuple[typing.List[typing.Optional[Player]]] = tuple(
+            [None for _ in range(3)] for _ in range(3))
         self._players: typing.List[Player] = [player1, player2]
         self._rounds = 0
 
@@ -57,7 +59,7 @@ class TicTacToe:
     @property
     def players(self):
         return self._players
-    
+
     @property
     def coordinates(self):
         return self._coordinates
@@ -78,7 +80,7 @@ class TicTacToe:
                 error = exc.args[0]
             else:
                 winner = self.test_winner(self.coordinates)
-                
+
         winner.winning(self.coordinates, self.rounds)
         return winner
 
@@ -107,7 +109,7 @@ class TicTacToe:
 
     @classmethod
     def test_winner(cls, coordinates):
-        
+
         for test in cls.tests:
             last_player: typing.Optional[str] = None
             for i, xy in enumerate(test):
@@ -119,7 +121,7 @@ class TicTacToe:
                     if player != last_player:
                         break
                     elif i == len(test) - 1:
-                        return player  
+                        return player
                 last_player = player
 
         # if there are no empty coordinates, a tie has occurred in the TIC TAC toe
@@ -127,5 +129,5 @@ class TicTacToe:
             for coordinate in line:
                 if coordinate is None:
                     return None
-                
+
         raise TieTicTacToe()

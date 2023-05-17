@@ -6,7 +6,7 @@ from tic_tac_toe.utils import clear
 
 
 def main():
-    
+
     tic_tac_toe = TicTacToe(Human("X"), EasyBot("O"))
 
     try:

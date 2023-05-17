@@ -8,18 +8,19 @@ if typing.TYPE_CHECKING:
 
 
 def print_coordinates(coordinates: typing.Tuple[typing.List[None], typing.List[None], typing.List[None]]):
-        print(" " * 3, end="x")
-        for i in range(3):
-            print(f'{i}', end=" " * 3)
-        print('\ny', '+---' * 3 + "+")
-        for i, line in enumerate(coordinates):
-            print(f"{i} ", end="")
-            for item in line:
-                print(f"| {item if item else ' '} ", end="")
-            print("|")
-            print(' ', '+---' * 3 + "+")
+    print(" " * 3, end="x")
+    for i in range(3):
+        print(f'{i}', end=" " * 3)
+    print('\ny', '+---' * 3 + "+")
+    for i, line in enumerate(coordinates):
+        print(f"{i} ", end="")
+        for item in line:
+            print(f"| {item if item else ' '} ", end="")
+        print("|")
+        print(' ', '+---' * 3 + "+")
 
-class Human(Player):    
+
+class Human(Player):
 
     def winning(self, coordinates: typing.Tuple[typing.List[None], ...], rounds: int):
         clear()
@@ -27,8 +28,8 @@ class Human(Player):
         print(f"the winner is {self} in {rounds} rounds")
 
     def get_move(self,
-             coordinates: typing.Tuple[typing.List[None], ...],
-             error: 'typing.Optional[TicTacToeException]') -> typing.Tuple[int, int]:
+                 coordinates: typing.Tuple[typing.List[None], ...],
+                 error: 'typing.Optional[TicTacToeException]') -> typing.Tuple[int, int]:
         error_message = None
         while True:
             clear()
@@ -53,6 +54,5 @@ class Human(Player):
                 break
             else:
                 error_message = "x and y must be decimal numbers"
-            
 
         return (int(x), int(y))

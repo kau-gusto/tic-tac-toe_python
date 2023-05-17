@@ -23,4 +23,3 @@ class EasyBot(Player):
         y = round(random() * 2)
 
         return (x, y)
-    
