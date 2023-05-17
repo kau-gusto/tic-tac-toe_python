@@ -10,6 +10,13 @@ class Player(abc.ABC):
     def __init__(self, char: str) -> None:
         self.char = char
         super().__init__()
+
+    def __str__(self):
+        return self.char
+    
+    def winning(self, coordinates: typing.Tuple[typing.List[None], typing.List[None], typing.List[None]],
+                 rounds: int):
+        ...
     
     def get_move(self,
              coordinates: typing.Tuple[typing.List[None], typing.List[None], typing.List[None]],

@@ -46,8 +46,13 @@ class TicTacToe:
         ]
 
     def __init__(self, player1: Player = Human("X"), player2: Player = EasyBot("O")) -> None:
-        self._coordinates: tuple[typing.List[typing.Optional[str]]] = tuple([None for _ in range(3)] for _ in range(3))
+        self._coordinates: tuple[typing.List[typing.Optional[Player]]] = tuple([None for _ in range(3)] for _ in range(3))
         self._players: typing.List[Player] = [player1, player2]
+        self._rounds = 0
+
+    @property
+    def rounds(self):
+        return self._rounds
 
     @property
     def players(self):
@@ -73,7 +78,8 @@ class TicTacToe:
                 error = exc.args[0]
             else:
                 winner = self.test_winner(self.coordinates)
-
+                
+        winner.winning(self.coordinates, self.rounds)
         return winner
 
     def _move(self, x: int, y: int, player: Player):
@@ -84,7 +90,7 @@ class TicTacToe:
         # x and y are inverted in the matrix
         if self._coordinates[y][x]:
             raise CoordinateOccupiedException(x, y)
-        self._coordinates[y][x] = player.char
+        self._coordinates[y][x] = player
 
     def move(self, x, y):
         self._move(x, y, self.actual_player)
@@ -92,6 +98,7 @@ class TicTacToe:
         # the player will be moved to the end of the stack
         last_player = self.players.pop(0)
         self.players.append(last_player)
+        self._rounds += 1
 
     def next_move(self, error: typing.Optional[TicTacToeException]):
         player = self.players[0]
@@ -102,18 +109,18 @@ class TicTacToe:
     def test_winner(cls, coordinates):
         
         for test in cls.tests:
-            last_xy: typing.Optional[str] = None
+            last_player: typing.Optional[str] = None
             for i, xy in enumerate(test):
                 x, y = xy
-                xy = coordinates[x][y]
-                if xy is None:
+                player = coordinates[x][y]
+                if player is None:
                     break
-                if last_xy:
-                    if xy != last_xy:
+                if last_player:
+                    if player != last_player:
                         break
                     elif i == len(test) - 1:
-                        return xy  
-                last_xy = xy
+                        return player  
+                last_player = player
 
         # if there are no empty coordinates, a tie has occurred in the TIC TAC toe
         for line in coordinates:

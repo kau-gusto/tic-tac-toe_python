@@ -10,11 +10,7 @@ def main():
     tic_tac_toe = TicTacToe(Human("X"), EasyBot("O"))
 
     try:
-        winner = tic_tac_toe.play()
-
-        clear()
-        print_coordinates(tic_tac_toe.coordinates)
-        print(f"the winner is {winner}")
+        tic_tac_toe.play()
     except TicTacToeException as exc:
         clear()
         print_coordinates(tic_tac_toe.coordinates)
