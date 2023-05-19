@@ -46,11 +46,12 @@ class TicTacToe:
         ((0, 2), (1, 2), (2, 2)),
     ]
 
-    def __init__(self, player1: Player = Human("X"), player2: Player = EasyBot("O")) -> None:
-        self._coordinates: tuple[typing.List[typing.Optional[Player]]] = tuple(
-            [None for _ in range(3)] for _ in range(3))
-        self._players: typing.List[Player] = [player1, player2]
-        self._rounds = 0
+    def __init__(
+        self, player1: Player = Human("X"), player2: Player = EasyBot("O")
+    ) -> None:
+        self._player1 = player1
+        self._player2 = player2
+        self.reset()
 
     @property
     def rounds(self):
@@ -68,6 +69,13 @@ class TicTacToe:
     def actual_player(self):
         return self.players[0]
 
+    def reset(self):
+        self._coordinates: tuple[typing.List[typing.Optional[Player]]] = tuple(
+            [None for _ in range(3)] for _ in range(3)
+        )
+        self._rounds = 0
+        self._players: typing.List[Player] = [self._player1, self._player2]
+
     def play(self):
         winner = None
 
@@ -82,6 +90,7 @@ class TicTacToe:
                 winner = self.test_winner(self.coordinates)
 
         winner.winning(self.coordinates, self.rounds)
+        self.reset()
         return winner
 
     def _move(self, x: int, y: int, player: Player):

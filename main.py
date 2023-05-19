@@ -6,15 +6,16 @@ from tic_tac_toe.utils import clear
 
 
 def main():
-
     tic_tac_toe = TicTacToe(Human("X"), EasyBot("O"))
-
-    try:
-        tic_tac_toe.play()
-    except TicTacToeException as exc:
-        clear()
-        print_coordinates(tic_tac_toe.coordinates)
-        print(exc)
+    while True:
+        try:
+            tic_tac_toe.play()
+        except TicTacToeException as exc:
+            clear()
+            print_coordinates(tic_tac_toe.coordinates)
+            print(exc)
+        if input("Do you want to continue?(y, n)\n") != "y":
+            break
 
 
 if __name__ == "__main__":
