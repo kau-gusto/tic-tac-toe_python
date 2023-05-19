@@ -28,12 +28,9 @@ class CoordinateOccupiedException(TicTacToeException):
 
 
 class TicTacToe:
-
     tests: typing.List[
         typing.Tuple[
-            typing.Tuple[int, int],
-            typing.Tuple[int, int],
-            typing.Tuple[int, int]
+            typing.Tuple[int, int], typing.Tuple[int, int], typing.Tuple[int, int]
         ]
     ] = [
         ((0, 0), (1, 1), (2, 2)),
@@ -78,7 +75,6 @@ class TicTacToe:
 
     def play(self):
         winner = None
-
         error = None
         while winner is None:
             try:
@@ -94,8 +90,7 @@ class TicTacToe:
         return winner
 
     def _move(self, x: int, y: int, player: Player):
-        if not (x in range(3)
-                and y in range(3)):
+        if not (x in range(3) and y in range(3)):
             raise CoordinateExceededException()
 
         # x and y are inverted in the matrix
@@ -118,7 +113,6 @@ class TicTacToe:
 
     @classmethod
     def test_winner(cls, coordinates):
-
         for test in cls.tests:
             last_player: typing.Optional[str] = None
             for i, xy in enumerate(test):

@@ -1,4 +1,3 @@
-
 from tic_tac_toe import TicTacToe, TicTacToeException
 from tic_tac_toe.player.bot import EasyBot
 from tic_tac_toe.player.human import Human, print_coordinates
