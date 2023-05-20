@@ -1,3 +1,4 @@
+import math
 import typing
 
 from tic_tac_toe.abc.player import Player
@@ -5,34 +6,32 @@ from tic_tac_toe.utils import clear
 
 if typing.TYPE_CHECKING:
     from tic_tac_toe import TicTacToeException
-
+    from tic_tac_toe import ListCoordinatesType
 
 def print_coordinates(
-    coordinates: typing.Tuple[typing.List[None], typing.List[None], typing.List[None]]
+    coordinates: 'ListCoordinatesType'
 ):
-    print(" " * 3, end="x")
-    for i in range(3):
-        print(f"{i}", end=" " * 3)
-    print("\ny", "+---" * 3 + "+")
-    for i, line in enumerate(coordinates):
-        print(f"{i} ", end="")
-        for item in line:
-            print(f"| {item if item else ' '} ", end="")
-        print("|")
-        print(" ", "+---" * 3 + "+")
+    size= math.sqrt(len(coordinates))
+    
+    print("+---" * 3 + "+")
+    for i, item in enumerate(coordinates):
+        print(f"| {item} ", end="")
+        if ((i + 1) % size) == 0:
+            print("|")
+            print("+---" * 3 + "+")
 
 
 class Human(Player):
-    def winning(self, coordinates: typing.Tuple[typing.List[None], ...], rounds: int):
+    def winning(self, coordinates: 'ListCoordinatesType', rounds: int):
         clear()
         print_coordinates(coordinates)
         print(f"the winner is {self} in {rounds} rounds")
 
     def get_move(
         self,
-        coordinates: typing.Tuple[typing.List[None], ...],
+        coordinates: 'ListCoordinatesType',
         error: "typing.Optional[TicTacToeException]",
-    ) -> typing.Tuple[int, int]:
+    ) -> int:
         error_message = None
         while True:
             clear()
@@ -47,15 +46,14 @@ class Human(Player):
             print(f"player -> {self.char}\r")
             print()
 
-            x = input("x: ")
+            coordinate = input("coordinate: ")
             print("\r", end="")
-            y = input("y: ")
-            print("\r", end="")
+
 
             print("\r" * 5)
-            if x.isdecimal() and y.isdecimal():
+            if coordinate.isdecimal():
                 break
             else:
-                error_message = "x and y must be decimal numbers"
+                error_message = "coordinate must be decimal numbers"
 
-        return (int(x), int(y))
+        return int(coordinate)

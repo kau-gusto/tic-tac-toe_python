@@ -21,26 +21,25 @@ class CoordinateExceededException(TicTacToeException):
 
 
 class CoordinateOccupiedException(TicTacToeException):
-    def __init__(self, x: int, y: int) -> None:
-        self.x = x
-        self.y = y
-        super().__init__(f"the coordinate ({x},{y}) is already taken")
+    def __init__(self, coordinate: int) -> None:
+        self.coordinate = coordinate
+        super().__init__(f"the coordinate ({coordinate}) is already taken")
+
+
+CoordinateType = typing.Union[int, Player]
+ListCoordinatesType = typing.List[CoordinateType]
 
 
 class TicTacToe:
-    tests: typing.List[
-        typing.Tuple[
-            typing.Tuple[int, int], typing.Tuple[int, int], typing.Tuple[int, int]
-        ]
-    ] = [
-        ((0, 0), (1, 1), (2, 2)),
-        ((0, 2), (1, 1), (2, 0)),
-        ((0, 0), (0, 1), (0, 2)),
-        ((1, 0), (1, 1), (1, 2)),
-        ((2, 0), (2, 1), (2, 2)),
-        ((0, 0), (1, 0), (2, 0)),
-        ((0, 1), (1, 1), (2, 1)),
-        ((0, 2), (1, 2), (2, 2)),
+    tests: typing.List[typing.Tuple[int, int, int]] = [
+        (0, 4, 8),
+        (2, 4, 6),
+        (0, 1, 2),
+        (3, 4, 5),
+        (6, 7, 8),
+        (0, 3, 6),
+        (1, 4, 7),
+        (2, 5, 8),
     ]
 
     def __init__(
@@ -67,9 +66,7 @@ class TicTacToe:
         return self.players[0]
 
     def reset(self):
-        self._coordinates: tuple[typing.List[typing.Optional[Player]]] = tuple(
-            [None for _ in range(3)] for _ in range(3)
-        )
+        self._coordinates: ListCoordinatesType = list(range(9))
         self._rounds = 0
         self._players: typing.List[Player] = [self._player1, self._player2]
 
@@ -81,25 +78,26 @@ class TicTacToe:
                 self.next_move(error)
                 error = None
             except TicTacToeException as exc:
-                error = exc.args[0]
+                error = exc
             else:
                 winner = self.test_winner(self.coordinates)
+                print(winner)
 
         winner.winning(self.coordinates, self.rounds)
         self.reset()
         return winner
 
-    def _move(self, x: int, y: int, player: Player):
-        if not (x in range(3) and y in range(3)):
+    def _move(self, player: Player, coordinate: int):
+        if not (coordinate in range(9)):
             raise CoordinateExceededException()
 
         # x and y are inverted in the matrix
-        if self._coordinates[y][x]:
-            raise CoordinateOccupiedException(x, y)
-        self._coordinates[y][x] = player
+        if isinstance(self._coordinates[coordinate], Player):
+            raise CoordinateOccupiedException(coordinate)
+        self._coordinates[coordinate] = player
 
-    def move(self, x, y):
-        self._move(x, y, self.actual_player)
+    def move(self, player: Player, coordinate: int):
+        self._move(player, coordinate)
 
         # the player will be moved to the end of the stack
         last_player = self.players.pop(0)
@@ -107,30 +105,27 @@ class TicTacToe:
         self._rounds += 1
 
     def next_move(self, error: typing.Optional[TicTacToeException]):
-        player = self.players[0]
-        x, y = player.get_move(self.coordinates, error)
-        self.move(x, y)
+        coordinate = self.actual_player.get_move(self.coordinates, error)
+        self.move(self.actual_player, coordinate)
 
     @classmethod
-    def test_winner(cls, coordinates):
+    def test_winner(cls, coordinates: ListCoordinatesType):
         for test in cls.tests:
-            last_player: typing.Optional[str] = None
-            for i, xy in enumerate(test):
-                x, y = xy
-                player = coordinates[x][y]
-                if player is None:
+            last_player: typing.Optional[Player] = None
+            for i, coordinate in enumerate(test):
+                player = coordinates[coordinate]
+                if isinstance(player, int):
                     break
                 if last_player:
                     if player != last_player:
                         break
-                    elif i == len(test) - 1:
+                    elif i == (len(test) - 1):
                         return player
                 last_player = player
 
         # if there are no empty coordinates, a tie has occurred in the TIC TAC toe
-        for line in coordinates:
-            for coordinate in line:
-                if coordinate is None:
-                    return None
+        for coordinate in coordinates:
+            if isinstance(coordinate, int):
+                return None
 
         raise TieTicTacToe()
