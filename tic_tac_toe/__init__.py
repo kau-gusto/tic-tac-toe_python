@@ -3,6 +3,7 @@ import typing
 from tic_tac_toe.abc.player import Player
 from tic_tac_toe.player.bot import EasyBot
 from tic_tac_toe.player.human import Human
+from tic_tac_toe.datasets import tests
 
 
 class TicTacToeException(Exception):
@@ -31,17 +32,6 @@ ListCoordinatesType = typing.List[CoordinateType]
 
 
 class TicTacToe:
-    tests: typing.List[typing.Tuple[int, int, int]] = [
-        (0, 4, 8),
-        (2, 4, 6),
-        (0, 1, 2),
-        (3, 4, 5),
-        (6, 7, 8),
-        (0, 3, 6),
-        (1, 4, 7),
-        (2, 5, 8),
-    ]
-
     def __init__(
         self, player1: Player = Human("X"), player2: Player = EasyBot("O")
     ) -> None:
@@ -110,22 +100,21 @@ class TicTacToe:
 
     @classmethod
     def test_winner(cls, coordinates: ListCoordinatesType):
-        for test in cls.tests:
-            last_player: typing.Optional[Player] = None
-            for i, coordinate in enumerate(test):
-                player = coordinates[coordinate]
-                if isinstance(player, int):
-                    break
-                if last_player:
-                    if player != last_player:
-                        break
-                    elif i == (len(test) - 1):
-                        return player
-                last_player = player
+        has_empty = False
+        for test in tests:
+            a_coordinate, b_coordinate, c_coordinate = test
+            a, b, c = (
+                coordinates[a_coordinate],
+                coordinates[b_coordinate],
+                coordinates[c_coordinate],
+            )
+            if isinstance(b, Player) and a == b and b == c:
+                return b
 
-        # if there are no empty coordinates, a tie has occurred in the TIC TAC toe
-        for coordinate in coordinates:
-            if isinstance(coordinate, int):
-                return None
+            # if there are no empty coordinates, a tie has occurred in the TIC TAC toe
+            if isinstance(a, int) or isinstance(b, int) or isinstance(c, int):
+                has_empty = True
 
-        raise TieTicTacToe()
+        if not has_empty:
+            raise TieTicTacToe()
+        return None
