@@ -63,6 +63,7 @@ class TicTacToe:
     def play(self):
         winner = None
         error = None
+        self.reset()
         while winner is None:
             try:
                 self.next_move(error)
@@ -71,10 +72,8 @@ class TicTacToe:
                 error = exc
             else:
                 winner = self.test_winner(self.coordinates)
-                print(winner)
 
         winner.winning(self.coordinates, self.rounds)
-        self.reset()
         return winner
 
     def _move(self, player: Player, coordinate: int):
