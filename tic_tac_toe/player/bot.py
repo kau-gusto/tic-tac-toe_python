@@ -8,42 +8,42 @@ from tic_tac_toe.utils import clear
 
 if typing.TYPE_CHECKING:
     from tic_tac_toe import TicTacToeException
-    from tic_tac_toe import ListCoordinatesType
-    from tic_tac_toe import CoordinateType
+    from tic_tac_toe import Board
+    from tic_tac_toe.board import ItemType
 
 
 class EasyBot(Player):
-    def winning(self, coordinates: "ListCoordinatesType", rounds: int):
+    def winning(self, board: "Board", rounds: int):
         clear()
-        print_coordinates(coordinates)
+        print_coordinates(board)
         print(f"the winner is {self} in {rounds} rounds")
 
     def get_move(
         self,
-        coordinates: "ListCoordinatesType",
+        board: "Board",
         _: "typing.Optional[TicTacToeException]",
     ) -> int:
-        coordinate = round(random() * len(coordinates))
+        coordinate = round(random() * len(board))
 
         return coordinate
 
 
 class IntermediaryBot(EasyBot):
-    def winning(self, coordinates: "ListCoordinatesType", rounds: int):
+    def winning(self, coordinates: "Board", rounds: int):
         clear()
         print_coordinates(coordinates)
         print(f"the winner is {self} in {rounds} rounds")
 
     def get_move(
         self,
-        coordinates: "ListCoordinatesType",
+        board: "Board",
         error: "typing.Optional[TicTacToeException]",
     ) -> int:
         if not error:
-            return_coordinate, garante = self.try_winner(coordinates)
+            return_coordinate, garante = self.try_winner(board)
             if garante and return_coordinate:
                 return return_coordinate
-            return_coordinate_defended, garante = self.try_defender(coordinates)
+            return_coordinate_defended, garante = self.try_defender(board)
             if garante and return_coordinate_defended:
                 return return_coordinate_defended
 
@@ -52,22 +52,22 @@ class IntermediaryBot(EasyBot):
             elif return_coordinate_defended:
                 return return_coordinate_defended
 
-        return super().get_move(coordinates, error)
+        return super().get_move(board, error)
 
     @classmethod
-    def _is_other_player(cls, player: Player, coordinate: "CoordinateType"):
+    def _is_other_player(cls, player: Player, coordinate: "ItemType"):
         return (not isinstance(coordinate, int)) and coordinate != player
 
     def try_defender(
-        self, coordinates: "ListCoordinatesType"
+        self, board: "Board"
     ) -> typing.Tuple[typing.Optional[int], bool]:
         return_coordinate: set[int] = set()
         for test in tests:
             a_coordinate, b_coordinate, c_coordinate = test
             a, b, c = (
-                coordinates[a_coordinate],
-                coordinates[b_coordinate],
-                coordinates[c_coordinate],
+                board[a_coordinate],
+                board[b_coordinate],
+                board[c_coordinate],
             )
             if (
                 self._is_other_player(self, a)
@@ -104,15 +104,15 @@ class IntermediaryBot(EasyBot):
         return (None, False)
 
     def try_winner(
-        self, coordinates: "ListCoordinatesType"
+        self, board: "Board"
     ) -> typing.Tuple[typing.Optional[int], bool]:
         return_coordinate: set[int] = set()
         for test in tests:
             a_coordinate, b_coordinate, c_coordinate = test
             a, b, c = (
-                coordinates[a_coordinate],
-                coordinates[b_coordinate],
-                coordinates[c_coordinate],
+                board[a_coordinate],
+                board[b_coordinate],
+                board[c_coordinate],
             )
             if a == self or b == self or c == self:
                 if a == self:

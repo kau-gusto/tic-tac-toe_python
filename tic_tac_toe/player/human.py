@@ -6,15 +6,15 @@ from tic_tac_toe.utils import clear
 
 if typing.TYPE_CHECKING:
     from tic_tac_toe import TicTacToeException
-    from tic_tac_toe import ListCoordinatesType
+    from tic_tac_toe import Board
 
 def print_coordinates(
-    coordinates: 'ListCoordinatesType'
+    board: 'Board'
 ):
-    size= math.sqrt(len(coordinates))
+    size= math.sqrt(len(board))
     
     print("+---" * 3 + "+")
-    for i, item in enumerate(coordinates):
+    for i, item in enumerate(board):
         print(f"| {item} ", end="")
         if ((i + 1) % size) == 0:
             print("|")
@@ -22,14 +22,14 @@ def print_coordinates(
 
 
 class Human(Player):
-    def winning(self, coordinates: 'ListCoordinatesType', rounds: int):
+    def winning(self, board: 'Board', rounds: int):
         clear()
-        print_coordinates(coordinates)
+        print_coordinates(board)
         print(f"the winner is {self} in {rounds} rounds")
 
     def get_move(
         self,
-        coordinates: 'ListCoordinatesType',
+        coordinates: 'Board',
         error: "typing.Optional[TicTacToeException]",
     ) -> int:
         error_message = None
