@@ -11,7 +11,7 @@ def main():
             tic_tac_toe.play()
         except TicTacToeException as exc:
             clear()
-            print_coordinates(tic_tac_toe.coordinates)
+            print_coordinates(tic_tac_toe.board)
             print(exc)
         if input("Do you want to continue?(y, n)\n") != "y":
             break

@@ -4,7 +4,7 @@ import typing
 
 if typing.TYPE_CHECKING:
     from tic_tac_toe import TicTacToeException
-    from tic_tac_toe import ListCoordinatesType
+    from tic_tac_toe import Board
 
 
 class Player(abc.ABC):
@@ -17,14 +17,14 @@ class Player(abc.ABC):
 
     def winning(
         self,
-        coordinates: 'ListCoordinatesType',
+        coordinates: 'Board',
         rounds: int,
     ):
         ...
 
     def get_move(
         self,
-        coordinates: 'ListCoordinatesType',
+        coordinates: 'Board',
         error: "typing.Optional[TicTacToeException]",
     ) -> int:
         ...
