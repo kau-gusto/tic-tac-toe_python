@@ -1,5 +1,9 @@
 import os
+import sys
 
 
 def clear():
-    os.system("clear")
+    command = "clear"
+    if sys.platform.startswith("win"):
+        command = "cls" 
+    os.system(command)
