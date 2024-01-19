@@ -91,3 +91,6 @@ class Board:
         if not has_empty:
             raise TieTicTacToe()
         return None
+    
+    def get_winner(self):
+        return Board.test_winner(self.board)

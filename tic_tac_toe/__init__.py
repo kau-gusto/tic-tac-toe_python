@@ -49,7 +49,7 @@ class TicTacToe:
             except TicTacToeException as exc:
                 error = exc
             else:
-                winner = Board.test_winner(self.board.board)
+                winner = self.board.get_winner()
 
         winner.winning(self.board, self.rounds)
         return winner
