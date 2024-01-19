@@ -16,7 +16,7 @@ class TieTicTacToe(TicTacToeException):
 
 class CoordinateExceededException(TicTacToeException):
     def __init__(self) -> None:
-        super().__init__("x and y must be between 0 and 2")
+        super().__init__("the coordinate must be between 0 and 8")
 
 
 class JustPlayedException(TicTacToeException):
