@@ -1,6 +1,6 @@
 # tic-tac-toe em Python
 
-`Uma simples biblioteca para a criação do jogo do tabuleiro TIC TAC TOE`
+`Uma simples biblioteca para a criação do jogo de tabuleiro TIC TAC TOE`
 
 ## tic_tac_toe
 
