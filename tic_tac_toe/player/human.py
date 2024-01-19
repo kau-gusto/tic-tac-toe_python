@@ -1,7 +1,7 @@
 import math
 import typing
 
-from tic_tac_toe.abc.player import Player
+from tic_tac_toe.abc import Player
 from tic_tac_toe.utils import clear
 
 if typing.TYPE_CHECKING:

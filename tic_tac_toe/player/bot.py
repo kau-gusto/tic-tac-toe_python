@@ -2,7 +2,7 @@ from random import random
 import typing
 
 from tic_tac_toe.datasets import tests
-from tic_tac_toe.abc.player import Player
+from tic_tac_toe.abc import Player
 from tic_tac_toe.player.human import print_coordinates
 from tic_tac_toe.utils import clear
 
