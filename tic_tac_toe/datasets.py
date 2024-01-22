@@ -1,7 +1,7 @@
 import typing
 
 
-tests: typing.List[typing.Tuple[int, int, int]] = [
+TESTS: typing.List[typing.Tuple[int, int, int]] = [
         (0, 4, 8),
         (2, 4, 6),
         (0, 1, 2),

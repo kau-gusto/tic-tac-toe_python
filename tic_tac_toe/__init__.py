@@ -1,65 +1,95 @@
-import typing
+def main():
+    import math
+    import typing
 
-from tic_tac_toe.abc.player import Player
-from tic_tac_toe.board import Board, TicTacToeException
-from tic_tac_toe.player.bot import EasyBot
-from tic_tac_toe.player.human import Human
-from tic_tac_toe.datasets import tests
+    from rich.console import Console
+    from rich.table import Table
+    from rich.prompt import Prompt
+    from rich.layout import Layout
+    from rich.live import Live
 
 
 
+    from .game import TicTacToe, TicTacToeException
+    from .player.ia import IntermediaryBot
+    from .player.human import Human
 
-class TicTacToe:
-    def __init__(
-        self, player1: Player = Human("X"), player2: Player = EasyBot("O")
-    ) -> None:
-        self._player1 = player1
-        self._player2 = player2
-        self.reset()
+    if typing.TYPE_CHECKING:
+        from .board import Board
 
-    @property
-    def rounds(self):
-        return self._rounds
+    layout = Layout(size=16)
+    layout.add_split(Layout(name="table"))
+    layout.add_split(Layout(name="player"))
+    layout.add_split(Layout(name="coordinates"))
+    layout.add_split(Layout(name="winner"))
 
-    @property
-    def players(self):
-        return self._players
 
-    @property
-    def board(self):
-        return self._board
 
-    @property
-    def actual_player(self):
-        return self.players[0]
+    prompt = Prompt()
+    console = Console()
 
-    def reset(self):
-        self._board = Board()
-        self._rounds = 0
-        self._players: typing.List[Player] = [self._player1, self._player2]
+    def update_table_coordinates(board: "Board"):
+        table = Table(title="Tic Tac Toe", show_header=False, show_lines=True)
+        size = int(math.sqrt(len(board)))
 
-    def play(self):
-        winner = None
-        error = None
-        self.reset()
-        while winner is None:
-            try:
-                self.next_move(error)
+        for index in range(size):
+            initial_index = index * size
+            table.add_row(
+                *map(
+                    lambda cell: str(cell),
+                    board.board[initial_index : initial_index + size],
+                )
+            )
+        layout["table"].update(table)
+        #console.print(layout)
+
+    def get_move(human, coordinates: "Board", error):
+        error_message = None
+        if error:
+            error_message = error.args[0]
+        while True:
+            if error_message:
+                console.print(error_message, style="yellow")
+                error_message = None
                 error = None
-            except TicTacToeException as exc:
-                error = exc
+            update_table_coordinates(coordinates)
+            """ console.print(
+                f"[i]player[/i] [b blink]->[/] [blue on white b]{human.char}[/]"
+            ) """
+            layout["player"].update(f"[i]player[/i] [b blink]->[/] [blue on white b]{human.char}[/]")
+            layout["coordinates"].update("coordinate")
+            coordinate = input()
+            #console.clear()
+            if coordinate.isdecimal():
+                break
             else:
-                winner = self.board.get_winner()
+                error_message = "coordinate must be decimal numbers"
 
-        winner.winning(self.board, self.rounds)
-        return winner
+        return int(coordinate)
+
+    tic_tac_toe = TicTacToe(Human("X", get_move), IntermediaryBot("O"))
+
+    with Live(layout, auto_refresh=False) as live:
+    
+        try:
+            #console.print(layout)
+            winner = tic_tac_toe.play()
+            #console.clear()
+            update_table_coordinates(tic_tac_toe.board)
+            layout["winner"].update(f"the winner is [b]{winner}[/b] in {tic_tac_toe.rounds} rounds")
+            """ console.print(
+                f"the winner is [b]{winner}[/b] in {tic_tac_toe.rounds} rounds"
+            ) """
+        except TicTacToeException as exc:
+            console.clear()
+            update_table_coordinates(tic_tac_toe.board)
+            console.print(exc)
+        if (
+            prompt.ask("Do you want to continue?", choices=["y", "n"], default="y")
+            != "y"
+        ):
+            live.stop()
 
 
-    def next_move(self, error: typing.Optional[TicTacToeException]):
-        coordinate = self.actual_player.get_move(self.board, error)
-        self.board.make_move(self.actual_player, coordinate)
-
-        # the player will be moved to the end of the stack
-        last_player = self.players.pop(0)
-        self.players.append(last_player)
-        self._rounds += 1
+if __name__ == "__main__":
+    main()

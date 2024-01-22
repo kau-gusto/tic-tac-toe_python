@@ -1,7 +1,7 @@
 import typing
 
-from tic_tac_toe.datasets import tests
-from tic_tac_toe.abc.player import Player
+from .abc.player import Player
+from .datasets import TESTS
 
 
 class TicTacToeException(Exception):
@@ -56,7 +56,7 @@ class Board:
 
     @property
     def board(self):
-        return self._board
+        return list(self._board)
 
     def make_move(self, player: Player, coordinate: int):
         if not (coordinate in range(9)):
@@ -74,7 +74,7 @@ class Board:
     @classmethod
     def test_winner(cls, board: ListBoardType):
         has_empty = False
-        for test in tests:
+        for test in TESTS:
             a_coordinate, b_coordinate, c_coordinate = test
             a, b, c = (
                 board[a_coordinate],
